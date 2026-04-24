@@ -27,9 +27,9 @@ Interactive web tool visualizing the Graph 3-Coloring NP-complete problem.
 ## ⚠️ Important Notes
 
 - **For GitHub Pages / LMS submission:** Use `index.html` (rename to `index.html`)
-  - Your assignment requires: "All HTML, CSS, and JavaScript must be inside one file"
+- Your assignment requires: "All HTML, CSS, and JavaScript must be inside one file"
 - **For studying / editing:** Use the split files (`index.html` + `style.css` + `script.js`)
-  - All 3 files must be in the SAME folder to work
+- All 3 files must be in the SAME folder to work
 
 ## ✨ Features
 - Expert Mode + Beginner Mode (bright & colorful)
