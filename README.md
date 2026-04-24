@@ -11,7 +11,7 @@ Interactive web tool visualizing the Graph 3-Coloring NP-complete problem.
 ├── index(5).html           ← Frontend (HTML structure & content)
 ├── style.css               ← Styling (CSS — colors, layout, animations)
 ├── script.js               ← Backend Logic (JavaScript — algorithms, quiz, charts)
-├── index.html  ← All-in-one version (for submission)
+├── index.html              ← All-in-one version (for submission)
 └── README.md               ← This file
 ```
 
