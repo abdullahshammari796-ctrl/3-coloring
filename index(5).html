@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graph 3-Coloring Explorer — BCS 309</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- MODE SELECTION OVERLAY -->
+<div class="mode-overlay" id="mode-overlay">
+  <div class="mode-card">
+    <h2>Welcome to Graph 3-Coloring Explorer</h2>
+    <p>Before we start, tell us about your background so we can tailor the experience for you:</p>
+    <div class="mode-choices">
+      <div class="mode-choice" onclick="chooseMode('experienced')">
+        <div class="mc-icon">💻</div>
+        <div class="mc-title">I Know Programming</div>
+        <div class="mc-desc">Show me the full technical details — pseudocode, complexity analysis, code in multiple languages, and formal proofs.</div>
+      </div>
+      <div class="mode-choice" onclick="chooseMode('beginner')">
+        <div class="mc-icon">🌱</div>
+        <div class="mc-title">I'm New to This</div>
+        <div class="mc-desc">Explain everything in simple words with real-life analogies. No confusing jargon — just clear, step-by-step learning.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODE BADGE -->
+<div class="mode-badge exp hidden" id="mode-badge" onclick="document.getElementById('mode-overlay').classList.remove('hidden')">
+  <span id="badge-text">🔧 Expert Mode</span> — click to switch
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Graph 3-Coloring Explorer</h1>
+  <div class="subtitle">BCS 309 — Algorithms I &nbsp;|&nbsp; Interactive NP-Completeness Visualization</div>
+</div>
+
+<div class="main-container" id="app" style="display:none">
+
+<!-- ============ WELCOME ============ -->
+<div class="panel section fade-in">
+  <div class="panel-title collapsible" onclick="toggleCollapse(this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    Welcome — Start Here
+  </div>
+  <div class="collapsible-content">
+
+    <!-- BEGINNER WELCOME -->
+    <div class="beginner-note"><span class="bn-icon">🌱</span> <strong>Welcome! You're in Beginner Mode.</strong> No math, no code, no stress — just simple ideas with fun pictures and examples. Switch to Expert anytime using the button in the top-right. Let's go! 🚀</div>
+
+    <div class="proof-step" style="border-color:var(--accent)">
+      <h4>What is Graph 3-Coloring?</h4>
+      <!-- EXPERT -->
+      <div class="expert-only">
+        <p>Given an undirected graph G = (V, E), can we color every vertex using at most <strong>3 colors</strong> so no two adjacent vertices share a color? This is <strong>NP-complete</strong>.</p>
+      </div>
+      <!-- BEGINNER -->
+      <div class="beginner-only">
+        <div class="story-box">
+          <span class="sb-title">🎨 Here's the idea in one sentence:</span>
+          Color a map using only 3 crayons, where neighbors can't share a color. That's it!
+        </div>
+
+        <p style="font-size:.92rem;margin-top:.6rem">Let's make it simple with pictures:</p>
+
+        <div class="fun-grid">
+          <div class="fun-card">
+            <span class="fc-icon">🗺️</span>
+            <div class="fc-title">Think of a map</div>
+            <div class="fc-text">Countries next to each other need different colors so you can tell them apart.</div>
+          </div>
+          <div class="fun-card">
+            <span class="fc-icon">🖍️</span>
+            <div class="fc-title">You have 3 crayons</div>
+            <div class="fc-text">Just red, green, and blue. Can you color the whole map?</div>
+          </div>
+          <div class="fun-card">
+            <span class="fc-icon">⚡</span>
+            <div class="fc-title">One simple rule</div>
+            <div class="fc-text">Touching countries must be different colors. That's the only rule!</div>
+          </div>
+        </div>
+
+        <div class="mini-demo">
+          <h5>🎮 Try it yourself!</h5>
+          <p style="font-size:.82rem;color:var(--text2);margin-bottom:.4rem">Can you color 3 countries in a triangle using 3 colors without breaking the rule?</p>
+          <button class="mini-demo-btn" onclick="tryDemo('easy')">✏️ Try the Triangle</button>
+          <button class="mini-demo-btn" onclick="tryDemo('hard')">🤯 Try K₄ (4 countries)</button>
+          <div class="mini-demo-result" id="demo-result"></div>
+        </div>
+
+        <div class="fun-fact">
+          <span class="ff-label">💡 FUN FACT</span>
+          Scientists have been studying this problem for <strong>50+ years</strong>. Nobody has found a fast way to solve it — and solving it would earn you a <strong>$1,000,000 prize</strong>! 💰
+        </div>
+
+        <!-- REAL-LIFE STORY -->
+        <div class="real-story">
+          <div class="real-story-header">
+            <div class="real-story-emoji">📱</div>
+            <div>
+              <div class="real-story-title">A Real Story: How Your Phone Works Right Now</div>
+              <div class="real-story-subtitle">Why this algorithm matters every single day</div>
+            </div>
+          </div>
+          <div class="real-story-body">
+            <p>🏙️ Imagine you're walking through Dubai. There are hundreds of cell phone towers around you — on buildings, streetlights, and poles. Every tower broadcasts on a radio frequency (like a TV channel). But here's the problem:</p>
+            <div class="story-quote">
+              💥 "If two nearby towers use the <strong>same frequency</strong>, your calls get static, your texts fail, and your internet dies!"
+            </div>
+            <p>📡 So phone companies have a huge challenge: <strong>assign a frequency to every tower, but no two nearby towers can share the same one.</strong> Sound familiar?</p>
+            <p>✨ That's <strong>EXACTLY the 3-coloring problem!</strong> Each tower is a "dot," each "nearby pair" is a "line," and each frequency is a "color."</p>
+
+            <div class="real-story-visual">
+              <div class="rsv-card"><span class="rsv-emoji">📡</span><div class="rsv-label">Tower = Dot</div></div>
+              <div class="rsv-card"><span class="rsv-emoji">🔗</span><div class="rsv-label">Nearby = Line</div></div>
+              <div class="rsv-card"><span class="rsv-emoji">🎨</span><div class="rsv-label">Frequency = Color</div></div>
+              <div class="rsv-card"><span class="rsv-emoji">📶</span><div class="rsv-label">Clear Signal!</div></div>
+            </div>
+
+            <p>🏆 <strong>Why it matters:</strong> Phone companies like Etisalat and du <em>actually use graph coloring algorithms</em> to decide which tower gets which frequency. Without this math, your phone would barely work!</p>
+            <div class="story-quote" style="border-left-color:#51cf66">
+              🌍 <strong>Other real places this happens:</strong> Wi-Fi routers in apartment buildings, traffic lights at intersections, exam schedules at your university, airline gate assignments at airports — all solved using the same idea!
+            </div>
+            <p style="color:#fcc419;font-weight:700">💫 So next time your phone works perfectly, remember — a graph coloring algorithm made that possible!</p>
+          </div>
+        </div>
+        <!-- END REAL-LIFE STORY -->
+      </div>
+
+      <!-- VIDEO LINKS -->
+      <div class="expert-only" style="margin-top:.75rem">
+        <p style="font-size:.84rem;color:var(--text2)">📺 <strong>Watch this video for a deeper explanation:</strong> <a href="https://www.youtube.com/watch?v=_3ueTRpaElM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=_3ueTRpaElM</a></p>
+      </div>
+      <div class="beginner-only" style="margin-top:.75rem">
+        <div class="story-box" style="border-left-color:var(--blue);background:rgba(51,154,240,.06)">
+          <span class="sb-title" style="color:var(--blue)">📺 Watch this friendly video (5 min):</span>
+          <a href="https://www.youtube.com/watch?v=jUyOtSPs3-Y" target="_blank" rel="noopener" style="word-break:break-all">https://www.youtube.com/watch?v=jUyOtSPs3-Y</a>
+          <p style="font-size:.78rem;color:var(--text3);margin-top:.3rem">It explains everything with simple animations — way easier than reading!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <h4 class="expert-only">Applications</h4>
+      <h4 class="beginner-only">Where Is This Used in Real Life?</h4>
+      <div class="expert-only">
+        <ul>
+          <li><strong>Register Allocation</strong> — interference graph coloring in compilers.</li>
+          <li><strong>Exam Scheduling</strong> — conflicting exams need different slots.</li>
+          <li><strong>Frequency Assignment</strong> — nearby towers need different frequencies.</li>
+          <li><strong>Map Coloring</strong> — adjacent regions need distinct colors.</li>
+        </ul>
+      </div>
+      <div class="beginner-only">
+        <p style="font-size:.9rem;color:#d0d0e8;margin-bottom:.6rem">This isn't just a math puzzle — it's used <strong>everywhere</strong> in things you use every day! ✨</p>
+        <div class="fun-grid">
+          <div class="fun-card" style="background:linear-gradient(135deg,#1e4d2b 0%,#0f3d5c 100%);border-color:rgba(81,207,102,.5)">
+            <span class="fc-icon">🗺️</span>
+            <div class="fc-title">Coloring Maps</div>
+            <div class="fc-text">Every atlas uses this! Countries next to each other are different colors so you can tell them apart at a glance.</div>
+          </div>
+          <div class="fun-card" style="background:linear-gradient(135deg,#4d2b1e 0%,#5c3d0f 100%);border-color:rgba(252,196,25,.5)">
+            <span class="fc-icon">📅</span>
+            <div class="fc-title">Your Exam Schedule</div>
+            <div class="fc-text">When two exams have the same students, they can't happen at the same time. Each time slot = one color!</div>
+          </div>
+          <div class="fun-card" style="background:linear-gradient(135deg,#2b1e4d 0%,#3d0f5c 100%);border-color:rgba(162,155,254,.5)">
+            <span class="fc-icon">📡</span>
+            <div class="fc-title">Your Phone Signal</div>
+            <div class="fc-text">Nearby phone towers use different radio channels so calls don't jumble. Each channel = one color!</div>
+          </div>
+          <div class="fun-card" style="background:linear-gradient(135deg,#4d1e3d 0%,#5c0f2b 100%);border-color:rgba(255,107,157,.5)">
+            <span class="fc-icon">🖥️</span>
+            <div class="fc-title">Inside Your Computer</div>
+            <div class="fc-text">Every app you run uses this trick to organize its memory. You're using it right now!</div>
+          </div>
+        </div>
+        <div class="fun-fact">
+          <span class="ff-label">🎯 COOL</span>
+          You've probably used this without knowing! Your phone, your school schedule, Google Maps — all use graph coloring behind the scenes. ✨
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <h4 class="expert-only">Algorithms</h4>
+      <h4 class="beginner-only">How Does the Computer Try to Solve This?</h4>
+      <div class="expert-only">
+        <ul>
+          <li><strong>Greedy</strong> — O(V+E) heuristic, may use &gt;3 colors.</li>
+          <li><strong>Backtracking</strong> — O(3^V) exact solver with pruning.</li>
+          <li><strong>Brute Force</strong> — Tries all 3^n assignments.</li>
+          <li><strong>Compare</strong> — Side-by-side view.</li>
+        </ul>
+      </div>
+      <div class="beginner-only">
+        <p style="font-size:.88rem;color:var(--text2);margin-bottom:.5rem">There are 3 main ways the computer tries to solve this. Pick one to learn:</p>
+
+        <div class="fun-card" style="background:linear-gradient(135deg,#1e4d2b 0%,#2b5c3d 100%);border:2px solid rgba(81,207,102,.6);border-left:6px solid #51cf66">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem">
+            <span style="font-size:1.8rem">🐰</span>
+            <div class="fc-title" style="margin:0;color:#51cf66;font-size:1.1rem">Greedy — The Fast One</div>
+          </div>
+          <div class="fc-text">Goes through the dots one by one and picks the first color that works. <strong>Super quick</strong>, but sometimes makes mistakes and uses too many colors.</div>
+          <div class="analogy" style="margin-top:.6rem">
+            <span class="an-emoji">🍽️</span>
+            <div class="an-text"><strong>Like seating dinner guests:</strong> You point at each empty chair one by one and say "you sit here!" — fast, but you might end up with friends at opposite ends of the table.</div>
+          </div>
+        </div>
+
+        <div class="fun-card" style="background:linear-gradient(135deg,#1e3d5c 0%,#2b4d6c 100%);border:2px solid rgba(51,154,240,.6);border-left:6px solid #339af0">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem">
+            <span style="font-size:1.8rem">🧩</span>
+            <div class="fc-title" style="margin:0;color:#339af0;font-size:1.1rem">Backtracking — The Smart One</div>
+          </div>
+          <div class="fc-text">Tries a color, checks if it works. If not, <strong>goes back and tries another</strong>. Always finds the right answer — but takes more time.</div>
+          <div class="analogy" style="margin-top:.6rem">
+            <span class="an-emoji">🗺️</span>
+            <div class="an-text"><strong>Like a maze:</strong> You pick a path. If you hit a dead end, you walk back and try a different path. You always get out eventually!</div>
+          </div>
+        </div>
+
+        <div class="fun-card" style="background:linear-gradient(135deg,#4d1e2b 0%,#5c2b3d 100%);border:2px solid rgba(255,107,107,.6);border-left:6px solid #ff6b6b">
+          <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem">
+            <span style="font-size:1.8rem">🐢</span>
+            <div class="fc-title" style="margin:0;color:#ff6b6b;font-size:1.1rem">Brute Force — Try Everything</div>
+          </div>
+          <div class="fc-text">Tries <strong>every single possible combination</strong>. It WILL find the answer... if you're willing to wait a very long time.</div>
+          <div class="analogy" style="margin-top:.6rem">
+            <span class="an-emoji">🔐</span>
+            <div class="an-text"><strong>Like cracking a lock:</strong> Try 001, 002, 003, 004... all the way to 999. You'll open it eventually, but it might take hours!</div>
+          </div>
+        </div>
+
+        <div class="fun-fact">
+          <span class="ff-label">🎬 WATCH NOW</span>
+          Scroll down to the <strong>"Watch the Coloring Happen!"</strong> section and click <strong>Play</strong>. You'll see these algorithms in action! ✨
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <span class="expert-only"><strong>Key Insight:</strong> Greedy is polynomial but approximate. Backtracking is exponential but exact. This trade-off is fundamental to NP-completeness.</span>
+      <span class="beginner-only">
+        <strong>🎯 The Big Idea in Plain English:</strong><br>
+        🐰 Fast method = sometimes wrong<br>
+        🧩 Correct method = sometimes slow<br>
+        🤷 <strong>Nobody has found a way to be BOTH fast AND always correct.</strong> That's the biggest unsolved mystery in computer science!
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MAIN TWO-COL ============ -->
+<div class="two-col">
+<!-- LEFT -->
+<div>
+  <div class="panel">
+    <div class="panel-title">Algorithm Mode</div>
+    <div class="beginner-note"><span class="bn-icon">🎮</span> Pick a method, pick a shape, then press <strong>Play</strong> and watch the magic happen!</div>
+    <div class="tabs" id="mode-tabs">
+      <div class="tab active" data-mode="greedy" onclick="setMode('greedy')">Greedy</div>
+      <div class="tab" data-mode="backtrack" onclick="setMode('backtrack')">Backtracking</div>
+      <div class="tab" data-mode="brute" onclick="setMode('brute')">Brute Force</div>
+      <div class="tab" data-mode="compare" onclick="setMode('compare')">Compare</div>
+    </div>
+    <div class="control-group">
+      <label class="expert-only">Graph Preset</label>
+      <label class="beginner-only">Choose a Shape to Color</label>
+      <select id="preset-select" onchange="loadPreset(this.value)">
+        <option value="triangle">Triangle (3 dots) — 3-colorable</option>
+        <option value="petersen">Petersen Graph (10 dots) — 3-colorable</option>
+        <option value="bipartite">Two Groups K₃,₃ (6 dots) — 2-colorable</option>
+        <option value="wheel5">Wheel (6 dots) — 3-colorable</option>
+        <option value="k4">Fully Connected K₄ (4 dots) — NOT 3-colorable</option>
+        <option value="cycle5">Ring C₅ (5 dots) — 3-colorable</option>
+        <option value="custom">Custom (draw your own)</option>
+      </select>
+    </div>
+    <div class="control-group" id="custom-input" style="display:none">
+      <label>Edges (e.g. 0-1, 1-2, 2-0)</label>
+      <input type="text" id="custom-edges" placeholder="0-1, 1-2, 2-3, 3-0, 0-2">
+      <button class="btn primary" style="margin-top:.4rem;width:100%" onclick="buildCustomGraph()">Build Graph</button>
+    </div>
+    <div class="control-group" id="order-group">
+      <label class="expert-only">Vertex Ordering (Greedy)</label>
+      <label class="beginner-only">Which dot to color first?</label>
+      <select id="vertex-order" onchange="resetAlgo()">
+        <option value="natural">In order (0, 1, 2…)</option>
+        <option value="random">Random</option>
+        <option value="degree-desc">Most connected first</option>
+        <option value="degree-asc">Least connected first</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Animation Speed: <span id="speed-val">5</span></label>
+      <input type="range" id="speed-slider" min="1" max="10" value="5" oninput="document.getElementById('speed-val').textContent=this.value">
+    </div>
+    <div class="btn-group">
+      <button class="btn primary" onclick="play()">▶ Play</button>
+      <button class="btn" onclick="pause()">▮▮ Pause</button>
+      <button class="btn" onclick="step()">▶| Step</button>
+      <button class="btn danger" onclick="resetAlgo()">↺ Reset</button>
+    </div>
+    <div class="status-bar"><div class="status-dot idle" id="status-dot"></div><span id="status-text">Ready</span></div>
+    <div style="font-size:.82rem;color:var(--text2);margin-bottom:.5rem">Step <strong id="step-counter">0</strong> / <strong id="step-total">0</strong></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title expert-only">Statistics</div>
+    <div class="panel-title beginner-only">Score Board</div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-val" id="stat-vertices">—</div><div class="stat-lbl expert-only">Vertices</div><div class="stat-lbl beginner-only">Dots</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-edges">—</div><div class="stat-lbl expert-only">Edges</div><div class="stat-lbl beginner-only">Lines</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-colors">—</div><div class="stat-lbl">Colors Used</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-ops">0</div><div class="stat-lbl expert-only">Operations</div><div class="stat-lbl beginner-only">Steps Taken</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-backtracks">0</div><div class="stat-lbl expert-only">Backtracks</div><div class="stat-lbl beginner-only">Undo's</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-result">—</div><div class="stat-lbl">Result</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Color Legend</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color" style="background:var(--c1)"></div>Color 1</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--c2)"></div>Color 2</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--c3)"></div>Color 3</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--yellow)"></div>4+</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--text3)"></div>None</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--accent);border:2px solid #fff"></div>Current</div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div>
+  <div class="panel" id="main-viz-panel">
+    <div class="panel-title expert-only">Graph Visualization</div>
+    <div class="panel-title beginner-only">Watch the Coloring Happen!</div>
+    <div class="beginner-note"><span class="bn-icon">👀</span> Watch the show! Dots = countries. Lines = borders. Press <strong>Play</strong> to see them get colored!</div>
+    <div class="viz-container" id="viz-main" style="height:440px"><svg id="graph-svg" viewBox="0 0 800 440"></svg></div>
+  </div>
+  <div class="panel" id="compare-panel" style="display:none">
+    <div class="panel-title">Side-by-Side Comparison</div>
+    <div class="compare-grid">
+      <div>
+        <div style="font-size:.82rem;color:var(--green);font-weight:600;margin-bottom:.4rem">Greedy (Fast)</div>
+        <div class="viz-container" style="height:300px"><svg id="graph-svg-greedy" viewBox="0 0 400 300"></svg></div>
+        <div class="stat-grid" style="margin-top:.5rem"><div class="stat-box"><div class="stat-val" id="cmp-greedy-colors">—</div><div class="stat-lbl">Colors</div></div><div class="stat-box"><div class="stat-val" id="cmp-greedy-ops">—</div><div class="stat-lbl">Ops</div></div></div>
+      </div>
+      <div>
+        <div style="font-size:.82rem;color:var(--blue);font-weight:600;margin-bottom:.4rem">Backtracking (Exact)</div>
+        <div class="viz-container" style="height:300px"><svg id="graph-svg-bt" viewBox="0 0 400 300"></svg></div>
+        <div class="stat-grid" style="margin-top:.5rem"><div class="stat-box"><div class="stat-val" id="cmp-bt-colors">—</div><div class="stat-lbl">Colors</div></div><div class="stat-box"><div class="stat-val" id="cmp-bt-ops">—</div><div class="stat-lbl">Ops</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE SECTION WITH LANGUAGE TABS -->
+  <div class="panel">
+    <div class="panel-title expert-only">Code — Multiple Languages</div>
+    <div class="panel-title beginner-only">Step-by-Step Instructions (Pseudocode)</div>
+    <div class="beginner-note"><span class="bn-icon">📖</span> Think of this as the recipe the computer follows. The highlighted line is what it's doing right now. Just read the friendly explanation below — ignore the code!</div>
+    <div class="expert-only">
+      <div class="lang-tabs" id="lang-tabs">
+        <div class="lang-tab active" onclick="setLang('pseudo',this)">Pseudocode</div>
+        <div class="lang-tab" onclick="setLang('python',this)">Python</div>
+        <div class="lang-tab" onclick="setLang('java',this)">Java</div>
+        <div class="lang-tab" onclick="setLang('cpp',this)">C++</div>
+        <div class="lang-tab" onclick="setLang('js',this)">JavaScript</div>
+      </div>
+    </div>
+    <div class="code-block code-panel" id="code-box"></div>
+    <div class="explain-box" id="explain-box">Press Play or Step to begin.</div>
+  </div>
+
+  <!-- GROWTH CURVE -->
+  <div class="panel">
+    <div class="panel-title expert-only">Growth Curve — Algorithm Scalability</div>
+    <div class="panel-title beginner-only">How Slow Does It Get? 📈</div>
+    <div class="beginner-note"><span class="bn-icon">📊</span> See how fast each method gets <em>slower</em> as graphs grow. 🐰 green stays chill, 🐢 red explodes!</div>
+    <div class="growth-tabs"><div class="growth-tab active" onclick="setChart('ops',this)">Operations</div><div class="growth-tab" onclick="setChart('bar',this)">Bar Chart</div></div>
+    <div class="chart-container"><canvas id="growth-chart" height="300"></canvas></div>
+  </div>
+</div>
+</div>
+
+<!-- ALGORITHM COMPARISON -->
+<div class="panel section fade-in">
+  <div class="panel-title collapsible" onclick="toggleCollapse(this)">
+    <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+    <span class="expert-only">Algorithm Comparison Table</span>
+    <span class="beginner-only">Which Method Wins? 🏆</span>
+  </div>
+  <div class="collapsible-content">
+    <div class="beginner-note"><span class="bn-icon">⚖️</span> Think of 3 students in a race: 🐰 Fast but messy, 🧩 Careful and correct, 🐢 Tries everything (super slow).</div>
+    <table class="algo-table">
+      <thead><tr><th style="width:16%">Property</th><th style="width:28%">Greedy</th><th style="width:28%">Backtracking</th><th style="width:28%">Brute Force</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Speed</strong></td><td><span class="tag tag-green">⚡ Very Fast</span></td><td><span class="tag tag-blue">🐢 Medium</span></td><td><span class="tag tag-red">🐌 Very Slow</span></td></tr>
+        <tr class="expert-only"><td><strong>Time</strong></td><td style="color:var(--green);font-family:var(--mono)">O(V+E)</td><td style="color:var(--blue);font-family:var(--mono)">O(3ⱽ)</td><td style="color:var(--red);font-family:var(--mono)">O(3ⱽ·E)</td></tr>
+        <tr><td><strong>Correct?</strong></td><td><span class="tag tag-red">Not always</span></td><td><span class="tag tag-green">Always ✓</span></td><td><span class="tag tag-green">Always ✓</span></td></tr>
+        <tr><td><strong>10 dots</strong></td><td style="color:var(--green)">~20 steps</td><td style="color:var(--blue)">~50–200</td><td style="color:var(--red)">~59,049</td></tr>
+        <tr><td><strong>20 dots</strong></td><td style="color:var(--green)">~40 steps</td><td style="color:var(--blue)">~500–5k</td><td style="color:var(--red)">~3.5 billion</td></tr>
+        <tr><td><strong>Best For</strong></td><td>Quick answers, big graphs</td><td>Finding exact solution</td><td>Tiny graphs only</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:.75rem"><strong class="expert-only">Key Takeaway:</strong><strong class="beginner-only">💡 Simple Summary:</strong> <span class="expert-only">Greedy is O(V+E) but not optimal. Backtracking guarantees correctness but at exponential cost. This is the P vs NP tension.</span><span class="beginner-only">The fast way might give a wrong answer. The correct way is very slow. Nobody has figured out how to be BOTH fast AND correct. This is literally a million-dollar unsolved problem!</span></div>
+  </div>
+</div>
+
+<!-- NP-COMPLETENESS CLO-5 -->
+<div class="panel section fade-in">
+  <div class="panel-title collapsible" onclick="toggleCollapse(this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span class="expert-only">CLO-5: NP-Completeness Proof</span>
+    <span class="beginner-only">CLO-5: Why Is This Problem So Hard?</span>
+  </div>
+  <div class="collapsible-content">
+    <div class="beginner-note"><span class="bn-icon">🧠</span> Ever wonder why some problems are <em>really</em> hard for computers? This section explains it in a fun way — no complex math, just simple ideas!</div>
+    <div class="proof-step"><h4 class="expert-only">Step 1: 3-Coloring ∈ NP</h4><h4 class="beginner-only">🎭 Easy to Check, Hard to Find</h4>
+      <div class="expert-only"><p><strong>Certificate:</strong> <code>c: V → {1,2,3}</code>. <strong>Verifier:</strong> Check <code>c(u)≠c(v)</code> for all edges — O(|E|). ✓</p></div>
+      <div class="beginner-only">
+        <div class="analogy">
+          <span class="an-emoji">🧩</span>
+          <div class="an-text"><strong>Jigsaw puzzle analogy:</strong> Looking at a finished puzzle and saying "yes, this looks right" — <strong>easy</strong>. But <em>putting together</em> a 1,000-piece puzzle from scratch? <strong>Hard!</strong></div>
+        </div>
+        <p style="font-size:.85rem;margin-top:.5rem">It's the same with 3-coloring:</p>
+        <div class="fun-grid" style="grid-template-columns:1fr 1fr">
+          <div class="fun-card" style="border-color:var(--green)">
+            <span class="fc-icon">✅</span>
+            <div class="fc-title" style="color:var(--green)">Checking = Easy</div>
+            <div class="fc-text">Give me a colored map, I'll check every border in seconds.</div>
+          </div>
+          <div class="fun-card" style="border-color:var(--red)">
+            <span class="fc-icon">❌</span>
+            <div class="fc-title" style="color:var(--red)">Finding = Hard</div>
+            <div class="fc-text">Figuring out the coloring yourself? That could take years!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="proof-step"><h4 class="expert-only">Step 2: 3-SAT ≤ₚ 3-Coloring</h4><h4 class="beginner-only">🔗 It's Connected to Another Hard Puzzle</h4>
+      <div class="expert-only"><p>Given a 3-SAT formula φ, build graph G with truth-setting gadget, variable gadgets, and clause gadgets.</p></div>
+      <div class="beginner-only">
+        <p style="font-size:.86rem">Scientists proved something really cool: <strong>if you could solve 3-Coloring quickly, you could solve a TON of other hard problems quickly too!</strong></p>
+        <div class="analogy">
+          <span class="an-emoji">🔗</span>
+          <div class="an-text">They're all like puzzles linked by a chain — solve one, solve them all. But nobody has figured out how... yet!</div>
+        </div>
+      </div>
+    </div>
+    <div class="proof-step expert-only" style="border-color:var(--c1)"><h4>Part A: Truth-Setting Gadget</h4><p>Triangle (T, F, B) forces 3 distinct colors.</p></div>
+    <div class="proof-step expert-only" style="border-color:var(--c2)"><h4>Part B: Variable Gadgets</h4><p>For each xᵢ: create xᵢ, ¬xᵢ connected to each other and B. One True, one False.</p></div>
+    <div class="proof-step expert-only" style="border-color:var(--c3)"><h4>Part C: Clause Gadgets</h4><p>OR-gadget with 6 aux vertices. 3-colorable iff ≥1 literal True.</p></div>
+    <div class="expert-only" style="margin:.75rem 0">
+      <svg viewBox="0 0 760 290" style="width:100%;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)">
+        <!-- Title labels -->
+        <text x="130" y="16" fill="#a0a0b8" font-size="12" font-weight="600" text-anchor="middle">Truth-Setting</text>
+        <text x="370" y="16" fill="#a0a0b8" font-size="12" font-weight="600" text-anchor="middle">Variable Gadget</text>
+        <text x="610" y="16" fill="#a0a0b8" font-size="12" font-weight="600" text-anchor="middle">Clause OR-Gadget</text>
+
+        <!-- Truth-Setting Gadget (shifted down) -->
+        <polygon points="130,50 80,130 180,130" fill="none" stroke="#6c5ce7" stroke-width="2"/>
+        <circle cx="130" cy="50" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="1.5"/><text x="130" y="55" fill="#fff" font-size="11" text-anchor="middle" font-weight="700">T</text>
+        <circle cx="80" cy="130" r="15" fill="#51cf66" stroke="#fff" stroke-width="1.5"/><text x="80" y="135" fill="#fff" font-size="11" text-anchor="middle" font-weight="700">F</text>
+        <circle cx="180" cy="130" r="15" fill="#339af0" stroke="#fff" stroke-width="1.5"/><text x="180" y="135" fill="#fff" font-size="11" text-anchor="middle" font-weight="700">B</text>
+
+        <!-- Variable Gadget (shifted down) -->
+        <line x1="330" y1="78" x2="410" y2="78" stroke="#666" stroke-width="1.5"/><line x1="330" y1="78" x2="370" y2="128" stroke="#666" stroke-width="1.5"/><line x1="410" y1="78" x2="370" y2="128" stroke="#666" stroke-width="1.5"/>
+        <circle cx="330" cy="78" r="15" fill="#ff6b6b" stroke="#fff" stroke-width="1.5"/><text x="330" y="83" fill="#fff" font-size="10" text-anchor="middle" font-weight="700">xᵢ</text>
+        <circle cx="410" cy="78" r="15" fill="#51cf66" stroke="#fff" stroke-width="1.5"/><text x="410" y="83" fill="#fff" font-size="10" text-anchor="middle" font-weight="700">¬xᵢ</text>
+        <circle cx="370" cy="128" r="15" fill="#339af0" stroke="#fff" stroke-width="1.5"/><text x="370" y="133" fill="#fff" font-size="11" text-anchor="middle" font-weight="700">B</text>
+
+        <!-- Clause OR-Gadget (shifted down) -->
+        <rect x="548" y="48" width="124" height="85" rx="8" fill="none" stroke="#fcc419" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <circle cx="575" cy="70" r="11" fill="#555" stroke="#fcc419"/><text x="575" y="74" fill="#fcc419" font-size="9" text-anchor="middle">ℓ₁</text>
+        <circle cx="610" cy="70" r="11" fill="#555" stroke="#fcc419"/><text x="610" y="74" fill="#fcc419" font-size="9" text-anchor="middle">ℓ₂</text>
+        <circle cx="645" cy="70" r="11" fill="#555" stroke="#fcc419"/><text x="645" y="74" fill="#fcc419" font-size="9" text-anchor="middle">ℓ₃</text>
+        <circle cx="610" cy="110" r="11" fill="#6c5ce7" stroke="#fff"/><text x="610" y="114" fill="#fff" font-size="9" text-anchor="middle">out</text>
+        <line x1="575" y1="81" x2="610" y2="99" stroke="#666"/><line x1="610" y1="81" x2="610" y2="99" stroke="#666"/><line x1="645" y1="81" x2="610" y2="99" stroke="#666"/>
+
+        <!-- Arrows between gadgets -->
+        <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#a0a0b8"/></marker></defs>
+        <line x1="205" y1="85" x2="305" y2="85" stroke="#a0a0b8" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="435" y1="85" x2="535" y2="85" stroke="#a0a0b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Correctness box -->
+        <rect x="30" y="170" width="700" height="105" rx="8" fill="rgba(108,92,231,.08)" stroke="#6c5ce7"/>
+        <text x="380" y="192" fill="#a0a0b8" font-size="12" font-weight="600" text-anchor="middle">Correctness of the Reduction</text>
+        <text x="380" y="214" fill="#e0e0ea" font-size="10" text-anchor="middle">Forward (⇒): If the 3-SAT formula is satisfiable, then the constructed graph G is 3-colorable.</text>
+        <text x="380" y="234" fill="#e0e0ea" font-size="10" text-anchor="middle">Backward (⇐): If the constructed graph G is 3-colorable, then the 3-SAT formula is satisfiable.</text>
+        <text x="380" y="256" fill="#51cf66" font-size="10" text-anchor="middle" font-weight="600">The construction runs in polynomial time: O(n + m) vertices and edges. ∎</text>
+      </svg>
+    </div>
+    <div class="highlight-box"><strong>Conclusion:</strong> <span class="expert-only">3-Coloring is NP-complete (in NP + NP-hard via 3-SAT reduction). ∎</span><span class="beginner-only">
+      <br><br>
+      🏆 <strong>3-Coloring is one of the hardest puzzles in computer science.</strong> Checking someone's answer is easy, but finding the answer from scratch? Super hard.
+      <br><br>
+      💰 <strong>Fun fact:</strong> There's a <strong>$1,000,000 prize</strong> waiting for whoever can prove whether this can be solved quickly or not. It's called the "P vs NP" problem. If you solve it, you'll be world famous!
+    </span></div>
+  </div>
+</div>
+
+<!-- CLO-3 -->
+<div class="panel section fade-in">
+  <div class="panel-title collapsible" onclick="toggleCollapse(this)">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+    <span class="expert-only">CLO-3: Algorithm Design</span>
+    <span class="beginner-only">CLO-3: How Each Method Works</span>
+  </div>
+  <div class="collapsible-content">
+    <div class="beginner-note"><span class="bn-icon">🎓</span> Let's meet the 4 methods! Each one has a different personality. Pick a favorite!</div>
+
+    <div class="proof-step" style="border-color:var(--green)"><h4>Greedy Coloring</h4>
+      <div class="expert-only"><p><strong>Paradigm:</strong> Greedy — always pick the locally optimal choice. <strong>Time:</strong> O(V+E). Assigns the smallest available color to each vertex in a given order. The result depends heavily on vertex ordering. Uses at most Δ+1 colors (where Δ is the maximum degree). <strong>Limitation:</strong> May use more than 3 colors even when a valid 3-coloring exists.</p></div>
+      <div class="beginner-only">
+        <div class="analogy">
+          <span class="an-emoji">🐰</span>
+          <div class="an-text"><strong>The Speedy Bunny:</strong> Hops through each dot, picks the first color that works, moves on. ⚡ Super fast but sometimes messy!</div>
+        </div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem">👉 <strong>Pros:</strong> Fast. &nbsp; <strong>Cons:</strong> Might use too many colors.</p>
+      </div>
+    </div>
+
+    <div class="proof-step" style="border-color:var(--blue)"><h4>Backtracking</h4>
+      <div class="expert-only"><p><strong>Paradigm:</strong> Backtracking with constraint propagation. <strong>Time:</strong> O(3^V) worst case. Try colors 1, 2, 3 for each vertex. If a conflict arises, undo the assignment and try the next color. If all 3 fail, backtrack further. <strong>Guarantee:</strong> Always finds a valid 3-coloring if one exists, or proves none exists. Pruning makes it much faster than brute force in practice.</p></div>
+      <div class="beginner-only">
+        <div class="analogy">
+          <span class="an-emoji">🧩</span>
+          <div class="an-text"><strong>The Careful Puzzle Solver:</strong> Tries a color. If it doesn't fit, goes back and tries another. Always finds the answer!</div>
+        </div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem">👉 <strong>Pros:</strong> Always correct. &nbsp; <strong>Cons:</strong> Takes more time.</p>
+      </div>
+    </div>
+
+    <div class="proof-step" style="border-color:var(--red)"><h4>Brute Force</h4>
+      <div class="expert-only"><p><strong>Paradigm:</strong> Exhaustive enumeration. <strong>Time:</strong> O(3^V · E). Generates every possible assignment of 3 colors to V vertices (3^V total), then checks each assignment against all edges. No pruning — every combination is checked. This is the theoretical baseline; backtracking improves on it by pruning invalid branches early.</p></div>
+      <div class="beginner-only">
+        <div class="analogy">
+          <span class="an-emoji">🐢</span>
+          <div class="an-text"><strong>The Slow Tortoise:</strong> Tries EVERY possible combination, one by one. Very slow, but will definitely find the answer!</div>
+        </div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem">👉 <strong>Pros:</strong> Guaranteed answer. &nbsp; <strong>Cons:</strong> Extremely slow for big graphs.</p>
+      </div>
+    </div>
+
+    <div class="proof-step" style="border-color:var(--accent)"><h4>Comparison Mode</h4>
+      <div class="expert-only"><p><strong>Purpose:</strong> Runs greedy and backtracking side-by-side on the same graph to demonstrate the trade-off between speed and optimality. Greedy finishes in O(V+E) but may use &gt;3 colors. Backtracking takes O(3^V) worst case but guarantees the minimum. This directly illustrates why NP-complete problems are hard — polynomial heuristics exist but can't guarantee optimal solutions.</p></div>
+      <div class="beginner-only">
+        <div class="analogy">
+          <span class="an-emoji">🏁</span>
+          <div class="an-text"><strong>The Race:</strong> Put Bunny vs Puzzle Solver on the same problem. Watch who wins and who's more accurate!</div>
+        </div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem">👉 Click the <strong>"Compare"</strong> tab above to watch the race live!</p>
+      </div>
+    </div>
+
+    <div class="highlight-box"><span class="expert-only"><strong>Design Trade-off:</strong> Greedy = O(V+E), approximate. Backtracking = O(3^V), exact. Brute force = O(3^V · E), exact but no pruning. The gap between polynomial and exponential time is the heart of NP-completeness.</span><span class="beginner-only">
+      <strong>💡 Remember:</strong><br>
+      🐰 Fast = sometimes wrong<br>
+      🧩 Correct = sometimes slow<br>
+      🐢 Try-everything = always slow<br>
+      🏆 No one has found a "perfect" method yet!
+    </span></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="panel section fade-in">
+  <div class="panel-title collapsible" onclick="toggleCollapse(this)">
+    <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+    Quiz — Test Your Knowledge (15 Questions)
+  </div>
+  <div class="collapsible-content">
+    <div class="beginner-note"><span class="bn-icon">🎯</span> Take your time — there's no rush! Stuck on a question? Scroll up for hints. You got this! 💪</div>
+    <div class="quiz-header"><div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div><div class="quiz-score" id="quiz-score-display">Score: 0 / 15</div></div>
+    <div id="quiz-container"></div>
+    <div style="display:flex;gap:.6rem;margin-top:.75rem;flex-wrap:wrap">
+      <button class="btn primary" onclick="submitQuiz()">✓ Submit Answers</button>
+      <button class="btn danger" onclick="resetQuiz()">↺ New Quiz (Shuffle)</button>
+    </div>
+    <div id="quiz-final-result" style="margin-top:.75rem;display:none"></div>
+  </div>
+</div>
+
+</div><!-- /main-container -->
+
+<div class="footer">
+  <strong>BCS 309 — Algorithms I</strong> &nbsp;|&nbsp; Canadian University Dubai &nbsp;|&nbsp; Spring 2026 &nbsp;|&nbsp; <em>Built with HTML, CSS &amp; JavaScript (single file, no frameworks)</em><br>
+  Al Shammari, Abdullah Mohammed Ali — 20220002132
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
